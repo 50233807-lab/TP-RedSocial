@@ -1,0 +1,41 @@
+@{
+    ViewData["Title"] = "Crear publicación";
+}
+
+<h1>Crear publicación</h1>
+
+<form class="formulario-principal"
+      action="@Url.Action("Crear", "Publicacion")"
+      method="post"
+      enctype="multipart/form-data">
+
+    <label>Título</label>
+
+    <input
+        type="text"
+        name="titulo"
+        required>
+
+    <label>Descripción</label>
+
+    <textarea
+        name="descripcion"
+        required></textarea>
+
+    <label>Imagen</label>
+
+    <input
+        type="file"
+        name="imagen"
+        accept="image/*"
+        required>
+
+    <button type="submit">
+        Publicar
+    </button>
+
+</form>
+
+<a href="@Url.Action("Index", "Publicacion")">
+    Volver
+</a>

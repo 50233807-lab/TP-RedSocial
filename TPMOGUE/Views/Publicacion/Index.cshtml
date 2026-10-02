@@ -1,0 +1,145 @@
+@using TPMOGUE.Models
+@model List<Publicacion>
+
+@{
+    ViewData["Title"] = "Publicaciones";
+    int idUsuario = Context.Session.GetInt32("IdUsuario").GetValueOrDefault();
+}
+
+<section class="encabezado-publicaciones">
+
+    <h1>Publicaciones</h1>
+
+    <p>
+        Bienvenido @Context.Session.GetString("NombreUsuario")
+    </p>
+
+    <a
+        href="@Url.Action("Crear", "Publicacion")"
+        class="boton-crear">
+        + Crear publicación
+    </a>
+
+    <a
+        href="@Url.Action("Logout", "Usuario")"
+        class="cerrar-sesion">
+        Cerrar sesión
+    </a>
+
+</section>
+
+<section id="publicaciones">
+
+    @foreach (Publicacion publicacion in Model)
+    {
+        Usuario usuario =
+            BD.ObtenerUsuario(publicacion.IdUsuario);
+
+        int cantidadMeGusta =
+            BD.CantidadMeGusta(publicacion.Id);
+
+        bool tieneMeGusta =
+            BD.UsuarioDioMeGusta(
+                publicacion.Id,
+                idUsuario
+            );
+
+        List<Comentario> comentarios =
+            BD.ObtenerComentarios(publicacion.Id);
+
+        <article class="publicacion">
+
+            <p>
+                @usuario.NombreUsuario
+            </p>
+
+            <p>
+                @publicacion.FechaPublicacion.ToString("dd/MM/yyyy HH:mm")
+            </p>
+
+            <h2>
+                @publicacion.Titulo
+            </h2>
+
+            <img
+                src="/img/@publicacion.Imagen"
+                alt="@publicacion.Titulo">
+
+            <p>
+                @publicacion.Descripcion
+            </p>
+
+            <button
+                type="button"
+                id="boton-like-@publicacion.Id"
+                onclick="MeGusta(@publicacion.Id)">
+
+                @if (tieneMeGusta)
+                {
+                    <text>Ya no me gusta</text>
+                }
+                else
+                {
+                    <text>Me gusta</text>
+                }
+
+            </button>
+
+            <span id="likes-@publicacion.Id">
+                @cantidadMeGusta
+            </span>
+
+            <span>Me gusta</span>
+
+            <section id="comentarios-@publicacion.Id">
+
+                @foreach (Comentario comentario in comentarios)
+                {
+                    Usuario usuarioComentario =
+                        BD.ObtenerUsuario(
+                            comentario.IdUsuarioComenta
+                        );
+
+                    <div class="comentario">
+
+                        <strong>
+                            @usuarioComentario.NombreUsuario
+                        </strong>
+
+                        <span>
+                            @comentario.Texto
+                        </span>
+
+                        <small>
+                            @comentario.FechaComentario.ToString("dd/MM/yyyy HH:mm")
+                        </small>
+
+                    </div>
+                }
+
+            </section>
+
+            <input
+                type="text"
+                id="comentario-@publicacion.Id"
+                placeholder="Escribí un comentario">
+
+            <button
+                type="button"
+                onclick="Comentar(@publicacion.Id)">
+                Comentar
+            </button>
+
+        </article>
+    }
+
+</section>
+
+<button
+    type="button"
+    id="verMas"
+    onclick="VerMas()">
+
+    Ver más
+
+</button>

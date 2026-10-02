@@ -1,0 +1,44 @@
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>Iniciar sesión</h1>
+
+<form class="formulario-principal"
+      action="@Url.Action("Login", "Usuario")"
+      method="post">
+
+    <label>Nombre de usuario</label>
+
+    <input
+        type="text"
+        name="nombreUsuario"
+        required>
+
+    <label>Contraseña</label>
+
+    <input
+        type="password"
+        name="contraseña"
+        required>
+
+    <button type="submit">
+        Iniciar sesión
+    </button>
+
+</form>
+
+@if (ViewBag.Error != null)
+{
+    <p>
+        @ViewBag.Error
+    </p>
+}
+
+<p>
+    ¿No tenés una cuenta?
+
+    <a href="@Url.Action("Registro", "Usuario")">
+        Registrate
+    </a>
+</p>
